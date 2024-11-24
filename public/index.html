@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HTTP Methods</title>
+</head>
+<body>
+    <h1>HTTP Methods</h1>
+
+    <!-- Form for POST -->
+    <form id="createItemForm">
+        <h2>Create Item (POST)</h2>
+        <input type="text" id="postData" placeholder="Enter item" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <!-- Section to display items -->
+    <h2>Items (GET)</h2>
+    <ul id="itemsList"></ul>
+
+    <!-- Form for PUT -->
+    <form id="updateItemForm">
+        <h2>Update Item (PUT)</h2>
+        <input type="text" id="putIndex" placeholder="Index to update" required>
+        <input type="text" id="putData" placeholder="New value" required>
+        <button type="submit">Update Item</button>
+    </form>
+
+    <!-- Form for DELETE -->
+    <form id="deleteItemForm">
+        <h2>Delete Item (DELETE)</h2>
+        <input type="text" id="deleteIndex" placeholder="Index to delete" required>
+        <button type="submit">Delete Item</button>
+    </form>
+
+    <!-- Form for Adding Two Numbers -->
+    <form id="addNumbersForm">
+        <h2>Add Two Numbers</h2>
+        <input type="number" id="num1" placeholder="Enter number 1" required>
+        <input type="number" id="num2" placeholder="Enter number 2" required>
+        <button type="submit">Add</button>
+    </form>
+    <p id="sumResult"></p> 
+
+    <script>
+        // JavaScript to interact with the server
+        const API_URL = 'http://localhost:3000/items';
+
+        async function fetchItems() {
+            const response = await fetch(API_URL);
+            const items = await response.json();
+            const list = document.getElementById('itemsList');
+            list.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index}: ${item}`;
+                list.appendChild(li);
+            });
+        }
+
+        document.getElementById('createItemForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = document.getElementById('postData').value;
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ item: data }),
+            });
+            fetchItems();
+        };
+
+        document.getElementById('updateItemForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const index = document.getElementById('putIndex').value;
+            const data = document.getElementById('putData').value;
+            await fetch(`${API_URL}/${index}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ item: data }),
+            });
+            fetchItems();
+        };
+
+        document.getElementById('deleteItemForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const index = document.getElementById('deleteIndex').value;
+            await fetch(`${API_URL}/${index}`, {
+                method: 'DELETE',
+            });
+            fetchItems();
+        };
+
+        document.getElementById('addNumbersForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+
+            const response = await fetch('http://localhost:3000/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ num1: parseFloat(num1), num2: parseFloat(num2) }),
+            });
+
+            const data = await response.json();
+
+            // Display the sum result in the paragraph with id 'sumResult'
+            const resultElement = document.getElementById('sumResult');
+            if (data.sum !== undefined) {
+                resultElement.textContent = `Sum: ${data.sum}`;
+            } else {
+                resultElement.textContent = 'Error: Please provide valid numbers.';
+            }
+        };
+
+        // Initial fetch of items
+        fetchItems();
+    </script>
+</body>
+</html>
