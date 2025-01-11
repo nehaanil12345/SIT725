@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie & Haiku Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Movie & Haiku Tracker</h1>
+    
+    
+    <div class="section">
+      <h2>Fetch Movie</h2>
+      <button id="fetchMovieBtn">Fetch "Back to the Future"</button>
+      <div id="movieResult" class="result"></div>
+    </div>
+    
+    
+    <div class="section">
+      <h2>Insert Haiku</h2>
+      <button id="insertHaikuBtn">Insert Haiku</button>
+      <div id="haikuResult" class="result"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Notifications</h2>
+    <div id="notificationArea"></div> <!-- Add this for notifications -->
+  </div>
+  
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
